@@ -181,7 +181,7 @@ clips:[
 var L='ru';try{L=localStorage.getItem('cv_lang')||((navigator.language||'').slice(0,2)==='ru'?'ru':'en')}catch(e){}
 var $=function(i){return document.getElementById(i)},timers=[],busy=false,TOTAL=3504;
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
-function wait(ms){return new Promise(function(r){timers.push(setTimeout(r,ms))})}
+var SPD=0.45;function wait(ms){return new Promise(function(r){timers.push(setTimeout(r,ms*SPD))})}
 function fmt(s){var m=Math.floor(s/60),x=s%60;return(m<10?'0':'')+m+':'+(x<10?'0':'')+x}
 function wave(){var w=$('wave'),h='';for(var i=0;i<90;i++){var v=20+Math.abs(Math.sin(i*1.7)*50+Math.sin(i*.37)*30);h+='<b style="height:'+Math.min(100,v)+'%"></b>'}
   w.innerHTML=h+'<div class="ph" id="ph"></div>'+CL.map(function(c,i){return'<div class="seg" id="seg'+i+'" style="left:'+(c.s/TOTAL*100)+'%;width:'+Math.max(2.4,c.d/TOTAL*100)+'%"><i>'+c.sc+'</i></div>'}).join('')}
@@ -199,7 +199,7 @@ async function stepRun(i,ms,msg){var el=$('st'+i);el.className='st run';$('log')
   var n=10;for(var k=1;k<=n;k++){el.style.setProperty('--p',(k*10)+'%');await wait(ms/n)}el.className='st ok'}
 async function run(){if(busy)return;reset();busy=true;$('go').disabled=true;var t=T[L];queue(['now','','']);$('res').innerHTML='';
   var ph=$('ph');ph.style.opacity=1;
-  var phs=Date.now();var iv=setInterval(function(){var k=Math.min(1,(Date.now()-phs)/2200);ph.style.left=(k*100)+'%';if(k>=1)clearInterval(iv)},40);timers.push(iv);
+  var phs=Date.now();var iv=setInterval(function(){var k=Math.min(1,(Date.now()-phs)/1000);ph.style.left=(k*100)+'%';if(k>=1)clearInterval(iv)},40);timers.push(iv);
   await stepRun(0,2200,t.logs[0]);ph.style.opacity=0;
   await stepRun(1,1400,t.logs[1]);
   for(var i=0;i<CL.length;i++){$('seg'+i).classList.add('on');await wait(350)}
